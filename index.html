@@ -552,14 +552,23 @@ function showResults(){
 }
 
 function resetAll(){
-  clearInterval(timer);clearInterval(bTimer);
-  secQs={};answers={};secIdx=0;curQ=0;mode='quick';
+  clearInterval(timer);
+  clearInterval(bTimer);
+  secQs={};
+  answers={};
+  secIdx=0;
+  curQ=0;
+  mode='quick';
   selSecs=[...SORD];
   document.getElementById('results').style.display='none';
   document.getElementById('timer').classList.remove('urgent');
-  document.querySelectorAll('.sc').forEach(function(c){c.classList.add('sel');});
+  document.querySelectorAll('.sc').forEach(function(c){
+    c.classList.add('sel');
+  });
   setMode('quick');
-// SERVICE WORKER REGISTRATION
+} // This closing brace resolves the syntax error
+
+// SERVICE WORKER REGISTRATION (Now correctly placed outside the function)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').catch(function(err) {
