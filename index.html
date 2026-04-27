@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAS 7 Practice Exam</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1b2a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TEAS Prep">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--navy:#0d1b2a;--deep:#1b2d40;--teal:#2ec4b6;--amber:#f4a261;--red:#e63946;--green:#52b788;--white:#f0f4f8;--muted:#8da0b3;--card:#162232;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+#splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;gap:1.2rem;max-width:620px;width:100%;text-align:center;}
+.badge{width:80px;height:80px;border-radius:50%;border:3px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:var(--teal);background:var(--deep);}
+h1{font-family:Georgia,serif;font-size:clamp(1.7rem,5vw,2.6rem);line-height:1.1;}
+h1 span{color:var(--teal);}
+.subtitle{color:var(--muted);font-size:.95rem;max-width:480px;line-height:1.6;}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;width:100%;}
+.mode-card{background:var(--card);border:2px solid rgba(46,196,182,0.2);border-radius:10px;padding:1.1rem;cursor:pointer;transition:border-color .2s;text-align:center;}
+.mode-card:hover,.mode-card.sel{border-color:var(--teal);background:rgba(46,196,182,0.08);}
+.mode-card .mi{font-size:1.5rem;margin-bottom:.3rem;}
+.mode-card .mt{font-weight:700;font-size:.9rem;margin-bottom:.25rem;}
+.mode-card.sel .mt{color:var(--teal);}
+.mode-card .md{color:var(--muted);font-size:.75rem;line-height:1.4;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;width:100%;}
+.sc{background:var(--card);border:1.5px solid rgba(46,196,182,0.2);border-radius:9px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .2s;text-align:left;}
+.sc:hover,.sc.sel{border-color:var(--teal);background:rgba(46,196,182,0.07);}
+.sc .st{font-weight:600;font-size:.88rem;margin-bottom:.25rem;}
+.sc .sm{color:var(--muted);font-size:.76rem;line-height:1.45;}
+.sc .sm span{color:var(--teal);font-weight:600;}
+.infobar{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:9px;padding:.8rem 1.1rem;font-size:.8rem;color:var(--muted);text-align:left;width:100%;line-height:1.55;}
+.infobar strong{color:var(--white);}
+.btn{background:var(--teal);color:var(--navy);border:none;padding:.85rem 2.2rem;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
+.btn:hover{opacity:.88;}
+.btn-ghost{background:transparent;border:1.5px solid var(--teal);color:var(--teal);padding:.7rem 1.6rem;border-radius:8px;font-size:.88rem;cursor:pointer;}
+.btn-warn{background:var(--amber);color:var(--navy);border:none;padding:.7rem 1.4rem;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;}
+.btn-back{background:transparent;border:1.5px solid rgba(255,255,255,0.2);color:var(--white);padding:.7rem 1.4rem;border-radius:8px;font-size:.88rem;cursor:pointer;}
+.btn-back:disabled{opacity:.3;cursor:default;}
+#exam{display:none;flex-direction:column;min-height:100vh;width:100%;max-width:780px;padding:1.4rem;gap:1.3rem;}
+.ehdr{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:.9rem;flex-wrap:wrap;gap:.5rem;}
+.slabel{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);font-weight:700;}
+.ssub{font-size:.72rem;color:var(--muted);margin-top:.15rem;}
+.pbar-wrap{display:flex;align-items:center;gap:.65rem;}
+.pbar{width:130px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+.pfill{height:100%;background:var(--teal);border-radius:3px;transition:width .3s;}
+.ptxt{font-size:.78rem;color:var(--muted);}
+.timer{font-size:.88rem;font-weight:700;color:var(--amber);}
+.timer.urgent{color:var(--red);}
+.qcard{background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:1.8rem;flex:1;}
+.qnum{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.65rem;}
+.qtxt{font-size:1rem;line-height:1.7;margin-bottom:1.5rem;}
+.choices{display:flex;flex-direction:column;gap:.55rem;}
+.choice{display:flex;align-items:flex-start;gap:.75rem;padding:.8rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:8px;cursor:pointer;transition:background .15s,border-color .15s;font-size:.92rem;line-height:1.4;}
+.choice:hover:not(.disabled){background:rgba(46,196,182,0.07);border-color:rgba(46,196,182,0.35);}
+.choice.selected{background:rgba(46,196,182,0.12);border-color:var(--teal);}
+.choice.correct{background:rgba(82,183,136,0.14);border-color:var(--green);}
+.choice.wrong{background:rgba(230,57,70,0.11);border-color:var(--red);}
+.choice.disabled{cursor:default;}
+.cletter{min-width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.choice.selected .cletter{background:var(--teal);color:var(--navy);}
+.choice.correct .cletter{background:var(--green);color:var(--navy);}
+.choice.wrong .cletter{background:var(--red);color:#fff;}
+.exp{margin-top:1rem;padding:.85rem 1rem;background:rgba(46,196,182,0.06);border-left:3px solid var(--teal);border-radius:0 7px 7px 0;font-size:.85rem;line-height:1.6;color:#cde;display:none;}
+.exp.show{display:block;}
+.exp strong{color:var(--teal);}
+.enav{display:flex;justify-content:space-between;align-items:center;padding-top:.4rem;gap:.5rem;flex-wrap:wrap;}
+#breakScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1.4rem;text-align:center;padding:2rem;}
+#breakScreen h2{font-family:Georgia,serif;font-size:1.9rem;}
+#breakScreen p{color:var(--muted);max-width:400px;line-height:1.6;}
+.btimer{font-size:3rem;font-family:Georgia,serif;color:var(--teal);}
+#results{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1.4rem 3rem;gap:1.6rem;max-width:700px;width:100%;}
+#results h2{font-family:Georgia,serif;font-size:1.9rem;text-align:center;}
+.sring{width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--teal);background:var(--card);box-shadow:0 0 35px rgba(46,196,182,0.15);}
+.sring .big{font-family:Georgia,serif;font-size:2.2rem;line-height:1;color:var(--teal);}
+.sring .lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem;}
+.bdown{width:100%;display:flex;flex-direction:column;gap:.65rem;}
+.bdrow{display:flex;align-items:center;gap:.9rem;background:var(--card);border-radius:9px;padding:.85rem 1.1rem;}
+.bdlabel{flex:1.2;font-size:.88rem;}
+.bdbarw{flex:2;height:7px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+.bdbar{height:100%;border-radius:3px;background:var(--teal);transition:width 1s ease;}
+.bdpct{min-width:85px;text-align:right;font-size:.82rem;color:var(--muted);}
+.sechdiv{width:100%;padding:.45rem 0 .2rem;font-family:Georgia,serif;font-size:1.05rem;border-bottom:1px solid rgba(255,255,255,0.09);}
+.rlist{width:100%;display:flex;flex-direction:column;gap:.85rem;}
+.ri{background:var(--card);border-radius:11px;padding:1.1rem 1.2rem;border-left:4px solid transparent;}
+.ri.rc{border-color:var(--green);}
+.ri.rw{border-color:var(--red);}
+.ri.rs{border-color:var(--amber);}
+.ri .rist{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.45rem;}
+.ri.rc .rist{color:var(--green);}
+.ri.rw .rist{color:var(--red);}
+.ri.rs .rist{color:var(--amber);}
+.ri .riq{font-size:.92rem;line-height:1.5;margin-bottom:.8rem;font-weight:500;}
+.rich{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.8rem;}
+.richoice{display:flex;align-items:flex-start;gap:.6rem;padding:.45rem .75rem;border-radius:6px;font-size:.84rem;line-height:1.35;border:1px solid transparent;background:rgba(255,255,255,0.03);}
+.richoice.rcc{background:rgba(82,183,136,0.12);border-color:var(--green);}
+.richoice.rcw{background:rgba(230,57,70,0.1);border-color:var(--red);}
+.richoice .rcl{min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;background:rgba(255,255,255,0.07);}
+.richoice.rcc .rcl{background:var(--green);color:var(--navy);}
+.richoice.rcw .rcl{background:var(--red);color:#fff;}
+.rctag{margin-left:auto;font-size:.68rem;font-weight:700;padding:.08rem .4rem;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.tgc{background:rgba(82,183,136,0.2);color:var(--green);}
+.tgw{background:rgba(230,57,70,0.2);color:var(--red);}
+.riexp{padding:.7rem .9rem;background:rgba(46,196,182,0.06);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;font-size:.82rem;line-height:1.55;color:#cde;}
+.riexp strong{color:var(--teal);}
+.btnrow{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;}
+@media print{
+  body{background:#fff!important;color:#000!important;font-family:'Times New Roman',serif!important;}
+  #splash,#exam,#breakScreen,.sring,.bdown,.btnrow{display:none!important;}
+  #results{display:block!important;padding:0!important;max-width:100%!important;}
+  #results h2{font-family:'Times New Roman',serif!important;color:#000!important;font-size:1.3rem!important;text-align:center;margin-bottom:.5rem;}
+  .sechdiv{font-family:'Times New Roman',serif!important;color:#000!important;border-bottom:1.5px solid #000!important;margin-top:.8rem;}
+  .ri{background:#fff!important;border-radius:0!important;border-left:3px solid #000!important;padding:.5rem .6rem!important;page-break-inside:avoid;margin-bottom:.3rem;}
+  .ri.rc{border-left-color:#1a7a4a!important;}
+  .ri.rw{border-left-color:#b01020!important;}
+  .ri .rist,.ri .riq,.richoice,.riexp{font-family:'Times New Roman',serif!important;color:#000!important;}
+  .ri.rc .rist{color:#1a7a4a!important;}
+  .ri.rw .rist{color:#b01020!important;}
+  .richoice{background:#fff!important;border:1px solid #ccc!important;font-size:.78rem!important;}
+  .richoice.rcc{background:#e8f5ee!important;border-color:#1a7a4a!important;}
+  .richoice.rcw{background:#fdecea!important;border-color:#b01020!important;}
+  .richoice .rcl{background:#eee!important;color:#000!important;}
+  .richoice.rcc .rcl{background:#1a7a4a!important;color:#fff!important;}
+  .richoice.rcw .rcl{background:#b01020!important;color:#fff!important;}
+  .riexp{background:#f5f5f5!important;border-left:2px solid #555!important;font-size:.76rem!important;}
+  .riexp strong{color:#000!important;}
+}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="badge">TEAS 7</div>
+  <h1>TEAS 7 <span>Practice</span> Exam</h1>
+  <p class="subtitle">Randomized questions every session. Pick Quick (10/section) or Full (official counts). Select your sections and go.</p>
+  <div class="mode-row">
+    <div class="mode-card sel" id="mq" onclick="setMode('quick')">
+      <div class="mi">⚡</div>
+      <div class="mt">Quick Practice</div>
+      <div class="md">10 random questions per section · ~10–15 min each</div>
+    </div>
+    <div class="mode-card" id="mf" onclick="setMode('full')">
+      <div class="mi">📋</div>
+      <div class="mt">Full Exam</div>
+      <div class="md">Official TEAS 7 counts · 170 q · 209 min · 10-min break</div>
+    </div>
+  </div>
+  <div class="sgrid">
+    <div class="sc sel" data-s="reading" onclick="toggleSec(this)">
+      <div class="st">📖 Reading</div>
+      <div class="sm" id="mr"><span>10 q</span> · ~14 min<br>Key Ideas · Craft · Integration</div>
+    </div>
+    <div class="sc sel" data-s="math" onclick="toggleSec(this)">
+      <div class="st">🔢 Mathematics</div>
+      <div class="sm" id="mm"><span>10 q</span> · ~15 min<br>Numbers · Algebra · Measurement</div>
+    </div>
+    <div class="sc sel" data-s="science" onclick="toggleSec(this)">
+      <div class="st">🔬 Science</div>
+      <div class="sm" id="ms"><span>10 q</span> · ~12 min<br>A&amp;P · Biology · Chemistry</div>
+    </div>
+    <div class="sc sel" data-s="english" onclick="toggleSec(this)">
+      <div class="st">✏️ English &amp; Language</div>
+      <div class="sm" id="me"><span>10 q</span> · ~10 min<br>Grammar · Vocabulary · Style</div>
+    </div>
+  </div>
+  <div class="infobar" id="ibar"><strong>Quick Practice:</strong> 10 randomly selected questions per section · fresh shuffle every session · full answer review with explanations at the end.</div>
+  <button class="btn" id="startBtn" onclick="startExam()">Begin Practice</button>
+</div>
+
+<div id="breakScreen">
+  <div style="font-size:2.2rem">☕</div>
+  <h2>10-Minute Break</h2>
+  <p>Math section complete. Science timer won't start until you continue.</p>
+  <div class="btimer" id="btimer">10:00</div>
+  <button class="btn" onclick="endBreak()">Continue to Science →</button>
+</div>
+
+<div id="exam">
+  <div class="ehdr">
+    <div>
+      <div class="slabel" id="slabel">Reading</div>
+      <div class="ssub" id="ssub"></div>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+      <div class="ptxt" id="ptxt">0/0</div>
+    </div>
+    <div class="timer" id="timer">00:00</div>
+  </div>
+  <div class="qcard">
+    <div class="qnum" id="qnum">Question 1</div>
+    <div class="qtxt" id="qtxt"></div>
+    <div class="choices" id="choices"></div>
+    <div class="exp" id="expbox"></div>
+  </div>
+  <div class="enav">
+    <button class="btn-back" id="prevBtn" onclick="nav(-1)" disabled>← Prev</button>
+    <button class="btn-warn" id="subBtn" onclick="confirmSub()" style="display:none">Submit Section</button>
+    <button class="btn" id="nextBtn" onclick="nav(1)">Next →</button>
+  </div>
+</div>
+
+<div id="results">
+  <h2 id="rtitle">Practice Complete</h2>
+  <div class="sring"><div class="big" id="spct">--%</div><div class="lbl">Score</div></div>
+  <div class="bdown" id="bdown"></div>
+  <h3 class="sechdiv">Question Review</h3>
+  <div class="rlist" id="rlist"></div>
+  <div class="btnrow">
+    <button class="btn" onclick="resetAll()">Try Again</button>
+    <button class="btn-ghost" onclick="window.print()">🖨️ Print Results</button>
+  </div>
+</div>
+
+<script>
+var SCFG={
+  reading:{name:'Reading',full:45,fmin:55,qmin:10,qqmin:14},
+  math:{name:'Mathematics',full:38,fmin:57,qmin:10,qqmin:15},
+  science:{name:'Science',full:50,fmin:60,qmin:10,qqmin:12},
+  english:{name:'English & Language',full:37,fmin:37,qmin:10,qqmin:10}
+};
+var SORD=['reading','math','science','english'];
+var MLABELS={
+  reading:{full:'<span>45 q</span> · 55 min<br>Key Ideas · Craft · Integration',quick:'<span>10 q</span> · ~14 min<br>Key Ideas · Craft · Integration'},
+  math:{full:'<span>38 q</span> · 57 min<br>Numbers · Algebra · Measurement',quick:'<span>10 q</span> · ~15 min<br>Numbers · Algebra · Measurement'},
+  science:{full:'<span>50 q</span> · 60 min<br>A&P · Biology · Chemistry',quick:'<span>10 q</span> · ~12 min<br>A&P · Biology · Chemistry'},
+  english:{full:'<span>37 q</span> · 37 min<br>Grammar · Vocabulary · Style',quick:'<span>10 q</span> · ~10 min<br>Grammar · Vocabulary · Style'}
+};
+
+var QB={
+reading:[
+{q:"A passage states: 'Despite vaccination campaigns, measles outbreaks continued in low-immunization communities.' The author's primary purpose is to:",choices:["Persuade readers to vaccinate","Argue vaccines are ineffective","Inform readers about an epidemiological relationship","Entertain with a health story"],answer:2,exp:"<strong>Inform about an epidemiological relationship.</strong> A factual correlation is presented without persuasion or narrative."},
+{q:"'Benign' in 'The tumor was benign, so the physician chose watchful waiting' most likely means:",choices:["Malignant","Harmless","Aggressive","Uncertain"],answer:1,exp:"<strong>Harmless.</strong> Watchful waiting instead of surgery signals the tumor was not dangerous."},
+{q:"'The nurse administered medication, and the patient's pain subsided' is which sentence structure?",choices:["Simple","Compound","Complex","Compound-complex"],answer:1,exp:"<strong>Compound.</strong> Two independent clauses joined by a coordinating conjunction."},
+{q:"Which text structure is: 'First, assess. Next, develop a care plan. Finally, implement'?",choices:["Cause and effect","Compare and contrast","Sequence/chronological","Problem and solution"],answer:2,exp:"<strong>Sequence/chronological.</strong> Signal words First, Next, Finally indicate time-ordered steps."},
+{q:"'Meticulous' most likely means:",choices:["Careless","Extremely careful and precise","Emotionally reserved","Overly cautious"],answer:1,exp:"<strong>Extremely careful and precise.</strong> From Latin 'fearful of mistakes.'"},
+{q:"Which is a secondary source?",choices:["A journal article analyzing multiple original studies","A nurse's original clinical trial","A patient's medical record","Raw survey data"],answer:0,exp:"<strong>A journal article analyzing multiple studies</strong> synthesizes others' primary research — secondary source."},
+{q:"'Exacerbate' most nearly means:",choices:["To reduce","To worsen","To study","To prevent"],answer:1,exp:"<strong>To worsen.</strong> 'Stress can exacerbate hypertension.'"},
+{q:"Which demonstrates logos (logical appeal)?",choices:["'Imagine your mother suffering.'","'Studies show 40% reduction in mortality with early intervention.'","'Trust me — I've been a doctor for 20 years.'","'This is simply the right thing to do.'"],answer:1,exp:"<strong>'Studies show 40% reduction in mortality'</strong> uses logos — quantitative evidence."},
+{q:"'Iatrogenic' most nearly refers to:",choices:["Disease of unknown origin","Condition caused by medical treatment","Patient's pre-existing condition","Inherited disorder"],answer:1,exp:"<strong>Caused by medical treatment.</strong> 'Iatros' = physician."},
+{q:"Which transition signals cause-and-effect?",choices:["Meanwhile","Nevertheless","Consequently","Similarly"],answer:2,exp:"<strong>Consequently</strong> signals a result. 'Meanwhile' = time; 'nevertheless' = contrast; 'similarly' = comparison."},
+{q:"Which statement is a fact rather than an opinion?",choices:["Nurses should have a 1:4 ratio.","The heart pumps approximately 5 L/min at rest.","Modern hospitals are too profit-focused.","Satisfaction scores are the best quality measure."],answer:1,exp:"<strong>'The heart pumps ~5 L/min at rest'</strong> is measurable and verifiable. Others are value judgments."},
+{q:"'Disparate' most nearly means:",choices:["Similar in nature","Fundamentally different","Closely connected","Equally distributed"],answer:1,exp:"<strong>Fundamentally different.</strong> 'Disparate outcomes' describes starkly unequal results."},
+{q:"The root 'hemo' means:",choices:["Heart","Blood","Bone","Brain"],answer:1,exp:"<strong>Blood.</strong> Examples: hemoglobin, hemorrhage, hemostasis. From Greek 'haima.'"},
+{q:"'Palliate' most nearly means:",choices:["Cure completely","Relieve symptoms without curing","Worsen a condition","Diagnose accurately"],answer:1,exp:"<strong>Relieve symptoms without curing.</strong> Palliative care focuses on comfort rather than cure."},
+{q:"'Contraindicated' most nearly means:",choices:["Strongly recommended","Not advisable due to potential harm","Requiring further study","Available without prescription"],answer:1,exp:"<strong>Not advisable due to potential harm.</strong> A contraindication makes a treatment potentially harmful."},
+{q:"Which graphic best shows ICU admissions changed month-by-month over two years?",choices:["Pie chart","Bar chart","Line graph","Venn diagram"],answer:2,exp:"<strong>Line graph.</strong> Ideal for continuous change over time (trends)."},
+{q:"'Efficacious' most nearly means:",choices:["Harmful","Producing the desired result","Widely available","Expensive"],answer:1,exp:"<strong>Producing the desired result.</strong> Common in pharmacology: 'an efficacious drug.'"},
+{q:"The prefix 'peri-' in 'pericardium' means:",choices:["Inside","Around","Without","Before"],answer:1,exp:"<strong>Around.</strong> Pericardium = the membrane surrounding the heart."},
+{q:"'Truncated' most nearly means:",choices:["Expanded","Cut short","Repeated","Clarified"],answer:1,exp:"<strong>Cut short.</strong> A truncated Y-axis can make small differences look large."},
+{q:"Which of the following is an example of inductive reasoning?",choices:["All humans need water; John is human; therefore John needs water.","Several patients improved with drug X; therefore drug X may help this population.","The policy requires all employees to complete training; therefore this employee must.","If the test is positive the patient has the disease; test is positive; therefore disease."],answer:1,exp:"<strong>Inductive reasoning</strong> moves from specific observations to a broader generalization."},
+{q:"'Subsequent' most nearly means:",choices:["Prior","Coming after","At the same time","Unrelated"],answer:1,exp:"<strong>Coming after.</strong> 'Subsequent assessments showed improvement' = assessments that came after."},
+{q:"The root 'osteo' means:",choices:["Muscle","Bone","Skin","Nerve"],answer:1,exp:"<strong>Bone.</strong> Examples: osteoporosis, osteoblast, osteoarthritis."},
+{q:"'Ambiguous' most nearly means:",choices:["Clear and definite","Open to multiple interpretations","Unnecessarily lengthy","Technically precise"],answer:1,exp:"<strong>Open to multiple interpretations.</strong> Ambiguous instructions in medication orders are a clinical safety concern."},
+{q:"Which describes a primary source in healthcare research?",choices:["A textbook chapter summarizing multiple studies","A meta-analysis of randomized trials","An original clinical trial report published in a journal","A continuing education module"],answer:2,exp:"<strong>An original clinical trial report</strong> presents new, firsthand data — a primary source."},
+{q:"'The physician's prognosis was guarded.' In this context, 'guarded' most nearly means:",choices:["Optimistic","Cautiously uncertain","Definitively negative","Protected by law"],answer:1,exp:"<strong>Cautiously uncertain.</strong> A 'guarded prognosis' means outcome is uncertain and potentially serious."},
+{q:"Which type of evidence is considered weakest for clinical guidelines?",choices:["Systematic reviews of multiple RCTs","Large cohort studies","Expert opinion and clinical consensus","Blinded randomized controlled trials"],answer:2,exp:"<strong>Expert opinion</strong> is at the bottom of the evidence hierarchy — reflects experience, not controlled research."},
+{q:"'Succinct' most nearly means:",choices:["Lengthy and detailed","Briefly and clearly expressed","Difficult to understand","Emotionally compelling"],answer:1,exp:"<strong>Briefly and clearly expressed.</strong> Succinct writing conveys maximum meaning in minimum words."},
+{q:"The prefix 'hyper-' means:",choices:["Below normal","Above normal","Without","Between"],answer:1,exp:"<strong>Above normal.</strong> Hypertension (high BP), hyperglycemia (high blood sugar). Contrast: hypo- = below."},
+{q:"Which sentence uses 'chronic' correctly?",choices:["She had a chronic headache lasting 20 minutes.","His chronic back pain persisted for over three years.","The chronic injury healed quickly.","A chronic fever resolved after one dose."],answer:1,exp:"<strong>'Chronic back pain persisted for over three years'</strong> is correct. Chronic = long-lasting (generally 3+ months)."},
+{q:"'Reticent' most nearly means:",choices:["Eager","Reluctant or reserved","Confused","Dishonest"],answer:1,exp:"<strong>Reluctant or reserved.</strong> A reticent patient may withhold important clinical information."}
+],
+math:[
+{q:"A nurse must administer 1,500 mL IV over 10 hours. Flow rate in mL/hr?",choices:["100 mL/hr","150 mL/hr","125 mL/hr","175 mL/hr"],answer:1,exp:"<strong>150 mL/hr</strong>: 1,500 ÷ 10 = 150."},
+{q:"Patient weighs 220 lbs. Weight in kg? (1 kg = 2.2 lbs)",choices:["100 kg","110 kg","48 kg","50 kg"],answer:0,exp:"<strong>100 kg</strong>: 220 ÷ 2.2 = 100."},
+{q:"Simplify: 3/4 + 1/6",choices:["4/10","11/12","2/3","5/12"],answer:1,exp:"<strong>11/12</strong>: LCD=12. 9/12 + 2/12 = 11/12."},
+{q:"Medication ordered: 0.5 mg/kg. Patient weighs 80 kg. How many mg?",choices:["40 mg","80 mg","0.5 mg","4 mg"],answer:0,exp:"<strong>40 mg</strong>: 0.5 × 80 = 40."},
+{q:"Temperature is 104°F. Convert to Celsius. C=(F-32)×5/9",choices:["39°C","40°C","41°C","38°C"],answer:1,exp:"<strong>40°C</strong>: (104-32)×5/9 = 72×0.556 ≈ 40."},
+{q:"Solve for x: 4x − 3 = 17",choices:["x=3","x=4","x=5","x=6"],answer:2,exp:"<strong>x=5</strong>: 4x=20 → x=5."},
+{q:"Mean of: 82, 79, 95, 88, 76",choices:["84","83","85","82"],answer:0,exp:"<strong>84</strong>: Sum=420. 420÷5=84."},
+{q:"Tablet: 250 mg. Order: 1 gram. How many tablets?",choices:["2","4","3","5"],answer:1,exp:"<strong>4 tablets</strong>: 1,000÷250=4."},
+{q:"What is 15% of 320?",choices:["48","42","54","46"],answer:0,exp:"<strong>48</strong>: 0.15×320=48."},
+{q:"Evaluate: 2³ + 4² − (3×5)",choices:["9","7","11","3"],answer:0,exp:"<strong>9</strong>: 8+16-15=9. PEMDAS: exponents first."},
+{q:"Patient drinks 8 oz juice, 12 oz broth, 6 oz water. Total in mL? (1 oz=30 mL)",choices:["720 mL","660 mL","780 mL","600 mL"],answer:2,exp:"<strong>780 mL</strong>: 26 oz × 30 = 780."},
+{q:"3 nurses for 12 patients. Nurses needed for 20 patients?",choices:["4","5","6","7"],answer:1,exp:"<strong>5 nurses</strong>: Ratio=1:4. 20÷4=5."},
+{q:"Order: 2.5 mg. Concentration: 1 mg/mL. Volume?",choices:["1 mL","2 mL","2.5 mL","3 mL"],answer:2,exp:"<strong>2.5 mL</strong>: 2.5÷1=2.5 mL."},
+{q:"A patient's O2 saturation dropped from 98% to 91%. By how many percentage points?",choices:["5","6","7","8"],answer:2,exp:"<strong>7 points</strong>: 98-91=7."},
+{q:"Medication: 5 mg/mL. Order: 12.5 mg. How many mL?",choices:["2 mL","2.5 mL","3 mL","1.5 mL"],answer:1,exp:"<strong>2.5 mL</strong>: 12.5÷5=2.5."},
+{q:"What is the range of: 12, 7, 19, 4, 15?",choices:["11","13","15","8"],answer:2,exp:"<strong>15</strong>: 19-4=15."},
+{q:"Patient must drink 2 liters/day. Has drunk 750 mL. How many more mL needed?",choices:["1,150 mL","1,250 mL","1,350 mL","1,450 mL"],answer:1,exp:"<strong>1,250 mL</strong>: 2,000-750=1,250."},
+{q:"Heparin ordered: 5,000 units. Vial: 10,000 units/mL. How many mL?",choices:["0.25 mL","0.5 mL","1 mL","2 mL"],answer:1,exp:"<strong>0.5 mL</strong>: 5,000÷10,000=0.5."},
+{q:"Patient bill: $4,800. Insurance pays 80%. Patient owes?",choices:["$840","$960","$1,200","$3,840"],answer:1,exp:"<strong>$960</strong>: Patient pays 20%. 0.20×4,800=960."},
+{q:"Solve: 2x + 7 = 3x − 5",choices:["x=10","x=12","x=2","x=7"],answer:1,exp:"<strong>x=12</strong>: 7+5=3x-2x → 12=x."},
+{q:"A patient takes 2 tablets twice daily for 14 days. Total tablets?",choices:["28","48","56","64"],answer:2,exp:"<strong>56 tablets</strong>: 2×2×14=56."},
+{q:"What percent of 200 is 50?",choices:["10%","20%","25%","40%"],answer:2,exp:"<strong>25%</strong>: 50÷200×100=25%."},
+{q:"Simplify: 5/6 − 1/4",choices:["4/2","7/12","2/3","1/3"],answer:1,exp:"<strong>7/12</strong>: LCD=12. 10/12-3/12=7/12."},
+{q:"IV runs at 125 mL/hr. How long will a 1-liter bag last?",choices:["6 hrs","8 hrs","10 hrs","12 hrs"],answer:1,exp:"<strong>8 hours</strong>: 1,000÷125=8."},
+{q:"Convert 98.6°F to Celsius. C=(F-32)×5/9",choices:["36°C","37°C","38°C","39°C"],answer:1,exp:"<strong>37°C</strong>: (98.6-32)×5/9≈37. Normal body temperature."},
+{q:"A drug has a half-life of 6 hours. Patient receives 200 mg. How much after 12 hours?",choices:["25 mg","50 mg","75 mg","100 mg"],answer:1,exp:"<strong>50 mg</strong>: After 6 hrs: 100 mg. After 12 hrs: 50 mg."},
+{q:"Solve: 3/x = 9/15",choices:["x=5","x=3","x=45","x=6"],answer:0,exp:"<strong>x=5</strong>: 3×15=9x → 45=9x → x=5."},
+{q:"Mode of: 4, 7, 9, 7, 3, 7, 4",choices:["4","7","3","9"],answer:1,exp:"<strong>7</strong>: Appears 3 times — most frequent."},
+{q:"A 25% dextrose solution. Grams of dextrose in 400 mL?",choices:["25 g","100 g","75 g","50 g"],answer:1,exp:"<strong>100 g</strong>: 0.25×400=100."},
+{q:"Patient receives 650 mL in 4 hours. Hourly rate?",choices:["175 mL/hr","162.5 mL/hr","150 mL/hr","130 mL/hr"],answer:1,exp:"<strong>162.5 mL/hr</strong>: 650÷4=162.5."}
+],
+science:[
+{q:"Which organelle packages and ships proteins to their destinations?",choices:["Ribosome","Mitochondria","Golgi apparatus","Lysosome"],answer:2,exp:"<strong>Golgi apparatus</strong> modifies, sorts, and packages proteins for secretion or intracellular use."},
+{q:"The primary function of red blood cells is to:",choices:["Fight infection","Transport oxygen via hemoglobin","Initiate clotting","Produce antibodies"],answer:1,exp:"<strong>Transport oxygen via hemoglobin.</strong> Hemoglobin binds O₂ in the lungs and releases it to tissues."},
+{q:"Which muscle tissue type is involuntary AND striated?",choices:["Skeletal","Cardiac","Smooth","Connective"],answer:1,exp:"<strong>Cardiac.</strong> Involuntary and striated. Skeletal = voluntary+striated; smooth = involuntary+non-striated."},
+{q:"Which hormone lowers blood glucose?",choices:["Glucagon","Cortisol","Insulin","Epinephrine"],answer:2,exp:"<strong>Insulin</strong> (pancreatic beta cells) facilitates glucose uptake. Glucagon raises blood glucose."},
+{q:"Normal blood pH range:",choices:["6.85–7.00","7.00–7.25","7.35–7.45","7.50–7.65"],answer:2,exp:"<strong>7.35–7.45.</strong> Below=acidosis; above=alkalosis."},
+{q:"Which brain structure regulates heart rate, BP, and breathing?",choices:["Cerebrum","Cerebellum","Medulla oblongata","Thalamus"],answer:2,exp:"<strong>Medulla oblongata</strong> contains autonomic control centers for cardiac and respiratory function."},
+{q:"Which best describes a covalent bond?",choices:["Transfer of electrons","Sharing of electron pairs","Attraction between opposite ions","Weak nonpolar attraction"],answer:1,exp:"<strong>Sharing of electron pairs.</strong> Example: H₂O. Ionic bonds involve electron transfer."},
+{q:"Which immune cell primarily produces antibodies?",choices:["T-lymphocyte","Natural killer cell","B-lymphocyte (plasma cell)","Neutrophil"],answer:2,exp:"<strong>B-lymphocytes/plasma cells</strong> secrete antibodies (immunoglobulins) as part of humoral immunity."},
+{q:"The Loop of Henle's primary function:",choices:["Reabsorbs glucose","Creates osmotic gradient for water reabsorption","Produces urine directly","Filters blood"],answer:1,exp:"<strong>Creates osmotic gradient</strong> in the renal medulla, enabling concentrated urine via ADH."},
+{q:"Which blood type is the universal donor?",choices:["Type A","Type B","Type AB","Type O negative"],answer:3,exp:"<strong>Type O negative</strong> lacks A, B, and Rh antigens — safest before blood typing."},
+{q:"DNA replication occurs during which cell cycle phase?",choices:["G1 phase","S phase","G2 phase","M phase"],answer:1,exp:"<strong>S phase (Synthesis).</strong> DNA replicated so each daughter cell gets a complete genome."},
+{q:"In Mendel's law of segregation, allele pairs separate during:",choices:["Fertilization","Mitosis","Meiosis","DNA replication"],answer:2,exp:"<strong>Meiosis.</strong> Allele pairs separate so each gamete gets one allele per trait."},
+{q:"Boyle's Law: at constant temperature, pressure and gas volume are:",choices:["Directly proportional","Inversely proportional","Independent","Exponentially related"],answer:1,exp:"<strong>Inversely proportional.</strong> P₁V₁=P₂V₂. Critical for respiratory mechanics."},
+{q:"Which is an example of negative feedback?",choices:["Labor contractions intensifying","Blood glucose rising after eating","Thermostat-like body temperature regulation","Oxytocin release during breastfeeding"],answer:2,exp:"<strong>Thermoregulation</strong> is classic negative feedback — always opposing deviations from set point."},
+{q:"Products of aerobic respiration:",choices:["Lactic acid","Ethanol","ATP, CO₂, and H₂O","Pyruvate only"],answer:2,exp:"<strong>ATP, CO₂, and H₂O.</strong> Full glucose oxidation. Lactic acid=anaerobic; ethanol=fermentation."},
+{q:"Which vessel carries oxygenated blood FROM the lungs TO the heart?",choices:["Pulmonary artery","Pulmonary vein","Superior vena cava","Aorta"],answer:1,exp:"<strong>Pulmonary vein.</strong> Unusual: a vein carrying oxygenated blood back to the left atrium."},
+{q:"The cerebellum is primarily responsible for:",choices:["Language processing","Fight-or-flight response","Coordination, balance, and fine motor control","Memory consolidation"],answer:2,exp:"<strong>Coordination, balance, and fine motor control.</strong> Damage causes ataxia."},
+{q:"A solution with pH 3 is how many times more acidic than pH 5?",choices:["2 times","10 times","100 times","1,000 times"],answer:2,exp:"<strong>100 times.</strong> pH scale is logarithmic (base 10). Difference of 2 = 10²=100-fold H⁺ change."},
+{q:"Which type of muscle is found in blood vessel walls?",choices:["Cardiac","Skeletal","Smooth","Striated voluntary"],answer:2,exp:"<strong>Smooth muscle</strong> lines blood vessel walls — involuntary and non-striated, allowing vasoconstriction/dilation."},
+{q:"Primary site of nutrient absorption from digested food:",choices:["Stomach","Large intestine","Small intestine","Esophagus"],answer:2,exp:"<strong>Small intestine.</strong> Duodenum, jejunum, ileum absorb most nutrients via villi and microvilli."},
+{q:"Which is an example of active transport?",choices:["Osmosis","Diffusion down a gradient","Sodium-potassium pump","Facilitated diffusion"],answer:2,exp:"<strong>Sodium-potassium pump</strong> moves ions against their gradient, requiring ATP."},
+{q:"What is the role of surfactant in the lungs?",choices:["Carries oxygen in blood","Reduces surface tension in alveoli to prevent collapse","Filters inhaled particles","Produces mucus"],answer:1,exp:"<strong>Reduces surface tension.</strong> Surfactant (type II pneumocytes) prevents alveolar collapse during exhalation."},
+{q:"Which gland secretes adrenaline (epinephrine)?",choices:["Thyroid gland","Pituitary gland","Adrenal medulla","Pancreas"],answer:2,exp:"<strong>Adrenal medulla</strong> secretes epinephrine and norepinephrine in response to stress."},
+{q:"What is cardiac output?",choices:["Heart rate only","Stroke volume only","Heart rate × stroke volume","Blood pressure × heart rate"],answer:2,exp:"<strong>Cardiac output = heart rate × stroke volume.</strong> Normal resting ≈5 L/min."},
+{q:"Which phase of mitosis involves chromosomes aligning at the equatorial plate?",choices:["Prophase","Anaphase","Metaphase","Telophase"],answer:2,exp:"<strong>Metaphase.</strong> Chromosomes fully condensed and aligned; spindle fibers attach at centromeres."},
+{q:"The parasympathetic nervous system is associated with:",choices:["Fight-or-flight response","Rest-and-digest functions","Increased heart rate","Pupil dilation"],answer:1,exp:"<strong>Rest-and-digest.</strong> Parasympathetic slows heart rate, increases digestion — opposite of sympathetic."},
+{q:"What is the function of the hypothalamus?",choices:["Controls conscious thought","Regulates temperature, hunger, thirst, and hormonal release","Processes visual information","Controls balance"],answer:1,exp:"<strong>Regulates temperature, hunger, thirst, and hormonal release.</strong> Links nervous and endocrine systems."},
+{q:"Which of the following is true of mitosis?",choices:["Produces 4 haploid daughter cells","Results in 2 genetically identical diploid cells","Only occurs in reproductive organs","Involves crossing over"],answer:1,exp:"<strong>Results in 2 genetically identical diploid cells.</strong> For growth and repair. Meiosis produces 4 haploid cells."},
+{q:"The term 'hypoxia' refers to:",choices:["Excess CO₂ in blood","Deficient oxygen supply to tissues","Excess oxygen in blood","Abnormal blood pH"],answer:1,exp:"<strong>Deficient oxygen supply to tissues.</strong> Caused by respiratory failure, anemia, or circulatory problems."},
+{q:"Which of the following correctly describes a reflex arc?",choices:["Voluntary response coordinated by the cerebral cortex","Rapid involuntary response that bypasses the brain","Learned behavior reinforced by reward","Hormonal response to environmental stimuli"],answer:1,exp:"<strong>Rapid involuntary response that bypasses the brain.</strong> Stimulus → sensory neuron → interneuron in spinal cord → motor neuron → effector."}
+],
+english:[
+{q:"Which sentence is grammatically correct?",choices:["Neither the doctor nor the nurses was available.","Neither the doctor nor the nurses were available.","Neither the doctor nor the nurses is available.","Neither the doctor nor the nurses are being available."],answer:1,exp:"<strong>'Were available'</strong> is correct. With neither/nor, verb agrees with nearest noun ('nurses' = plural → 'were')."},
+{q:"Choose the correctly punctuated sentence.",choices:["The lab results however were inconclusive.","The lab results, however, were inconclusive.","The lab results however, were inconclusive.","The lab results, however were inconclusive."],answer:1,exp:"<strong>Commas before and after 'however'</strong> when used as an interrupter."},
+{q:"Which word is spelled correctly?",choices:["Garentee","Guarantee","Guarentee","Garantee"],answer:1,exp:"<strong>Guarantee.</strong> Contains 'guar-.' Memory tip: contains 'guard.'"},
+{q:"Which contains a dangling modifier?",choices:["Running quickly, the nurse reached the patient.","Having reviewed the chart, the doctor ordered tests.","Walking down the hall, the chart fell to the floor.","After eating, the patient felt nauseous."],answer:2,exp:"<strong>'Walking down the hall, the chart fell.'</strong> The chart cannot walk — logical subject is missing."},
+{q:"Which uses a colon correctly?",choices:["The nurse needed: gloves, gauze, and tape.","She brought the following supplies: gloves, gauze, and tape.","She: brought gloves, gauze, and tape.","She brought: gloves, gauze, and tape."],answer:1,exp:"<strong>'She brought the following supplies: ...'</strong> Colon must follow a complete independent clause."},
+{q:"Which is a complex sentence?",choices:["The patient arrived and the nurse assessed him.","The patient arrived.","Because the patient was in pain, the nurse administered medication.","The patient arrived; the nurse assessed him."],answer:2,exp:"<strong>'Because the patient was in pain...'</strong> One independent + one dependent clause = complex."},
+{q:"Part of speech of 'quickly' in: 'The nurse quickly assessed the patient.'",choices:["Adjective","Adverb","Preposition","Conjunction"],answer:1,exp:"<strong>Adverb.</strong> 'Quickly' modifies the verb 'assessed.'"},
+{q:"Which is written in the active voice?",choices:["The chart was reviewed by the physician.","Medication was administered to the patient.","The physician reviewed the chart.","The patient was assessed by the team."],answer:2,exp:"<strong>'The physician reviewed the chart'</strong> — subject performs the action. Others are passive."},
+{q:"The suffix '-itis' means:",choices:["Removal of","Condition of","Inflammation of","Study of"],answer:2,exp:"<strong>Inflammation of.</strong> Appendicitis, arthritis, gastritis. '-ectomy'=removal; '-ology'=study of."},
+{q:"Which demonstrates parallel structure?",choices:["She likes running, to swim, and hikes.","She likes running, swimming, and hiking.","She likes to run, swimming, and hike.","She likes to run, to swimming, and hiking."],answer:1,exp:"<strong>'Running, swimming, and hiking'</strong> — all gerunds. Parallel structure = same grammatical form."},
+{q:"'Circumvent' most nearly means:",choices:["Go through directly","Find a way around","Eliminate completely","Reinforce"],answer:1,exp:"<strong>Find a way around.</strong> Circum-(around)+vent(come) = bypass an obstacle."},
+{q:"Suffix '-plasty' means:",choices:["Removal of","Surgical repair or reconstruction","Inflammation","Pertaining to"],answer:1,exp:"<strong>Surgical repair or reconstruction.</strong> Rhinoplasty, arthroplasty, angioplasty."},
+{q:"Most concise revision of: 'Due to the fact that the patient was experiencing pain, medication was ordered by the physician.'",choices:["The physician ordered medication because the patient was in pain.","Due to pain, medication was administered.","Because pain existed, medication ordering occurred.","Medication was ordered due to the patient having pain."],answer:0,exp:"<strong>'The physician ordered medication because the patient was in pain.'</strong> Removes circumlocutions; active voice."},
+{q:"Which contains a run-on error?",choices:["She worked all night, and she was exhausted.","She worked all night she was exhausted.","She worked all night; she was exhausted.","Although she worked all night, she was exhausted."],answer:1,exp:"<strong>'She worked all night she was exhausted.'</strong> Two independent clauses fused without punctuation."},
+{q:"Prefix 'anti-' means:",choices:["Before","Against","After","With"],answer:1,exp:"<strong>Against.</strong> Antibiotic, antiviral, antiseptic, anticoagulant."},
+{q:"Which sentence has correct comma usage?",choices:["The tall, dark-haired, nurse walked in.","The tall, dark-haired nurse walked in.","The tall dark-haired, nurse walked in.","The, tall dark-haired nurse walked in."],answer:1,exp:"<strong>'The tall, dark-haired nurse'</strong> — comma separates coordinate adjectives; no comma before the noun."},
+{q:"The prefix 'tachy-' in 'tachycardia' means:",choices:["Slow","Rapid","Absent","Irregular"],answer:1,exp:"<strong>Rapid.</strong> Tachycardia = rapid heart rate (>100 bpm). Contrast: brady- = slow."},
+{q:"Which sentence correctly uses 'fewer' vs. 'less'?",choices:["There are less nurses on night shift.","She had less than five patients.","There are fewer nurses on night shift.","She administered less tablets than ordered."],answer:2,exp:"<strong>'There are fewer nurses'</strong> is correct. Use 'fewer' with countable nouns; 'less' with uncountable/mass nouns."},
+{q:"The suffix '-ology' means:",choices:["Surgical removal","Study of","Abnormal condition","Pertaining to"],answer:1,exp:"<strong>Study of.</strong> Cardiology, neurology, pharmacology, pathology."},
+{q:"'Succinct' most nearly means:",choices:["Lengthy and detailed","Briefly and clearly expressed","Difficult to understand","Emotionally compelling"],answer:1,exp:"<strong>Briefly and clearly expressed.</strong> Highly valued in clinical documentation."},
+{q:"Which of the following is the correct plural of 'diagnosis'?",choices:["Diagnosises","Diagnosees","Diagnoses","Diagnosiss"],answer:2,exp:"<strong>Diagnoses.</strong> Medical terms ending in '-is' form plurals by changing '-is' to '-es.'"},
+{q:"The prefix 'hyper-' means:",choices:["Below normal","Above normal","Without","Between"],answer:1,exp:"<strong>Above normal.</strong> Hypertension (high BP), hyperglycemia. Contrast: hypo- = below normal."},
+{q:"Which word is correctly hyphenated?",choices:["Anti-biotic","Self-confidence","Re-view","Un-common"],answer:1,exp:"<strong>Self-confidence</strong> is correctly hyphenated. 'Self-' compounds always use a hyphen."},
+{q:"Choose the sentence with no grammatical errors.",choices:["Her and the doctor disagreed.","Between you and I, the policy is unfair.","The medication affects each patient differently.","He should of called the physician sooner."],answer:2,exp:"<strong>'The medication affects each patient differently.'</strong> 'Her'→'She'; 'between you and I'→'me'; 'should of'→'should have.'"},
+{q:"'Benevolent' most nearly means:",choices:["Harmful","Well-meaning and kind","Strict and demanding","Indifferent"],answer:1,exp:"<strong>Well-meaning and kind.</strong> From Latin bene(well)+volent(wishing)."},
+{q:"Which sentence correctly uses 'who' vs. 'whom'?",choices:["Who did the charge nurse assign to room 4?","Whom assigned the patient to room 4?","The patient whom arrived first was seen first.","The nurse whom I spoke with was helpful."],answer:3,exp:"<strong>'The nurse whom I spoke with was helpful.'</strong> Use 'whom' as the object. Test: 'I spoke with him' → 'whom.'"},
+{q:"Which sentence uses the subjunctive mood correctly?",choices:["If I was the charge nurse, I would change the policy.","If I were the charge nurse, I would change the policy.","If I am the charge nurse, I would change the policy.","If I be the charge nurse, I would change the policy."],answer:1,exp:"<strong>'If I were...'</strong> Subjunctive uses 'were' (not 'was') for hypothetical situations."},
+{q:"'Permeate' most nearly means:",choices:["To block completely","To spread throughout","To measure carefully","To separate into parts"],answer:1,exp:"<strong>To spread throughout.</strong> 'Water permeates the membrane.'"},
+{q:"Which sentence correctly uses a comma with a coordinating conjunction?",choices:["She completed her assessment, but did not document it.","She completed her assessment but, did not document it.","She completed her assessment but did not document it.","She, completed her assessment but did not document it."],answer:2,exp:"<strong>'She completed her assessment but did not document it.'</strong> Same subject = no comma before the conjunction."},
+{q:"'Indolent' in a medical context most nearly means:",choices:["Painful and acute","Slow-growing and causing little pain","Rapidly spreading","Completely benign"],answer:1,exp:"<strong>Slow-growing and causing little pain.</strong> An indolent lesion grows slowly with few obvious symptoms."}
+]
+};
+
+// STATE
+var mode='quick',selSecs=[...SORD],secQs={},secIdx=0,curQ=0,answers={},timer=null,secs=0,bTimer=null,bSecs=600;
+
+function shuffle(a){var b=[...a];for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mq').classList.toggle('sel',m==='quick');
+  document.getElementById('mf').classList.toggle('sel',m==='full');
+  var ids={reading:'mr',math:'mm',science:'ms',english:'me'};
+  Object.keys(ids).forEach(function(k){document.getElementById(ids[k]).innerHTML=MLABELS[k][m==='full'?'full':'quick'];});
+  if(m==='quick'){
+    document.getElementById('ibar').innerHTML='<strong>Quick Practice:</strong> 10 randomly selected questions per section · fresh shuffle every session.';
+    document.getElementById('startBtn').textContent='Begin Practice';
+  } else {
+    document.getElementById('ibar').innerHTML='<strong>Full Exam:</strong> 170 questions · 209 minutes · 10-min break after Math. Once a section is submitted you cannot go back.';
+    document.getElementById('startBtn').textContent='Begin Full Exam';
+  }
+}
+
+function toggleSec(el){
+  var s=el.dataset.s;
+  if(el.classList.contains('sel')){
+    if(selSecs.length===1)return;
+    el.classList.remove('sel');
+    selSecs=selSecs.filter(function(x){return x!==s;});
+  } else {
+    el.classList.add('sel');
+    if(!selSecs.includes(s)){selSecs.push(s);selSecs.sort(function(a,b){return SORD.indexOf(a)-SORD.indexOf(b);});}
+  }
+}
+
+function getCount(s){return mode==='full'?SCFG[s].full:SCFG[s].qmin;}
+function getMins(s){return mode==='full'?SCFG[s].fmin:SCFG[s].qqmin;}
+
+function startExam(){
+  selSecs.forEach(function(s){
+    var pool=shuffle(QB[s]);
+    secQs[s]=pool.slice(0,getCount(s));
+    answers[s]=new Array(getCount(s)).fill(null);
+  });
+  secIdx=0;curQ=0;
+  document.getElementById('splash').style.display='none';
+  document.getElementById('exam').style.display='flex';
+  startTimer();renderQ();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  secs=getMins(selSecs[secIdx])*60;
+  tickTimer();
+  timer=setInterval(tickTimer,1000);
+}
+
+function tickTimer(){
+  secs--;
+  if(secs<=0){clearInterval(timer);advanceSec();return;}
+  var m=Math.floor(secs/60).toString().padStart(2,'0');
+  var s=(secs%60).toString().padStart(2,'0');
+  var el=document.getElementById('timer');
+  el.textContent=m+':'+s;
+  el.classList.toggle('urgent',secs<=300);
+}
+
+function confirmSub(){
+  var s=selSecs[secIdx];
+  var unanswered=answers[s].filter(function(a){return a===null;}).length;
+  var msg=unanswered>0?'You have '+unanswered+' unanswered question(s). Submit section? You cannot return.':'Submit this section? You cannot go back.';
+  if(confirm(msg))advanceSec();
+}
+
+function advanceSec(){
+  clearInterval(timer);
+  document.getElementById('timer').classList.remove('urgent');
+  var cur=selSecs[secIdx];
+  var next=secIdx+1;
+  if(cur==='math'&&mode==='full'&&next<selSecs.length&&selSecs[next]==='science'){
+    document.getElementById('exam').style.display='none';
+    document.getElementById('breakScreen').style.display='flex';
+    bSecs=600;tickBreak();bTimer=setInterval(tickBreak,1000);
+    return;
+  }
+  if(next>=selSecs.length){showResults();return;}
+  secIdx=next;curQ=0;
+  startTimer();renderQ();
+}
+
+function tickBreak(){
+  bSecs--;
+  var m=Math.floor(bSecs/60).toString().padStart(2,'0');
+  var s=(bSecs%60).toString().padStart(2,'0');
+  document.getElementById('btimer').textContent=m+':'+s;
+  if(bSecs<=0){clearInterval(bTimer);endBreak();}
+}
+
+function endBreak(){
+  clearInterval(bTimer);
+  document.getElementById('breakScreen').style.display='none';
+  secIdx++;curQ=0;
+  document.getElementById('exam').style.display='flex';
+  startTimer();renderQ();
+}
+
+function renderQ(){
+  var s=selSecs[secIdx];
+  var qs=secQs[s];
+  var q=qs[curQ];
+  var total=qs.length;
+  document.getElementById('slabel').textContent=SCFG[s].name;
+  document.getElementById('ssub').textContent='Section '+(secIdx+1)+' of '+selSecs.length+' · '+getMins(s)+' min · '+(mode==='quick'?'Quick':'Full');
+  document.getElementById('qnum').textContent='Question '+(curQ+1)+' of '+total;
+  document.getElementById('qtxt').textContent=q.q;
+  document.getElementById('pfill').style.width=(((curQ+1)/total)*100)+'%';
+  document.getElementById('ptxt').textContent=(curQ+1)+'/'+total;
+
+  var ch=document.getElementById('choices');
+  ch.innerHTML='';
+  var ans=answers[s][curQ];
+  var done=ans!==null;
+  q.choices.forEach(function(c,i){
+    var d=document.createElement('div');
+    d.className='choice'+(done?' disabled':'');
+    if(done){if(i===q.answer)d.classList.add('correct');else if(i===ans)d.classList.add('wrong');}
+    else if(ans===i)d.classList.add('selected');
+    d.innerHTML='<div class="cletter">'+String.fromCharCode(65+i)+'</div><div>'+c+'</div>';
+    if(!done)d.onclick=(function(idx){return function(){selectAns(idx);};})(i);
+    ch.appendChild(d);
+  });
+
+  var exp=document.getElementById('expbox');
+  if(done){exp.innerHTML=q.exp;exp.classList.add('show');}
+  else{exp.classList.remove('show');exp.innerHTML='';}
+
+  document.getElementById('prevBtn').disabled=curQ===0;
+  var nb=document.getElementById('nextBtn');
+  var sb=document.getElementById('subBtn');
+  if(curQ===total-1){nb.style.display='none';sb.style.display='inline-block';}
+  else{nb.style.display='inline-block';sb.style.display='none';nb.onclick=function(){nav(1);};}
+}
+
+function selectAns(i){
+  answers[selSecs[secIdx]][curQ]=i;
+  renderQ();
+}
+
+function nav(d){
+  var s=selSecs[secIdx];
+  curQ=Math.max(0,Math.min(secQs[s].length-1,curQ+d));
+  renderQ();
+}
+
+function showResults(){
+  document.getElementById('exam').style.display='none';
+  document.getElementById('results').style.display='flex';
+  document.getElementById('rtitle').textContent=mode==='full'?'Full Exam Complete':'Practice Complete';
+  var tc=0,tq=0;
+  var bd=document.getElementById('bdown');bd.innerHTML='';
+  selSecs.forEach(function(s){
+    var qs=secQs[s],an=answers[s];
+    var c=an.filter(function(a,i){return a===qs[i].answer;}).length;
+    tc+=c;tq+=qs.length;
+    var pct=Math.round(c/qs.length*100);
+    bd.innerHTML+='<div class="bdrow"><div class="bdlabel">'+SCFG[s].name+'</div><div class="bdbarw"><div class="bdbar" style="width:0%" data-p="'+pct+'"></div></div><div class="bdpct">'+c+'/'+qs.length+' ('+pct+'%)</div></div>';
+  });
+  document.getElementById('spct').textContent=Math.round(tc/tq*100)+'%';
+
+  var rl=document.getElementById('rlist');rl.innerHTML='';
+  selSecs.forEach(function(s){
+    rl.innerHTML+='<div class="sechdiv">'+SCFG[s].name+'</div>';
+    secQs[s].forEach(function(q,i){
+      var a=answers[s][i];
+      var skipped=a===null;
+      var correct=!skipped&&a===q.answer;
+      var cls=skipped?'rs':correct?'rc':'rw';
+      var stat=skipped?'⚪ Skipped':correct?'✓ Correct':'✗ Incorrect';
+      var ch='<div class="rich">';
+      q.choices.forEach(function(c,ci){
+        var isCorr=ci===q.answer,isUser=ci===a;
+        var cc='richoice';var tag='';
+        if(isCorr&&isUser){cc+=' rcc';tag='<span class="rctag tgc">✓ Your answer</span>';}
+        else if(isCorr){cc+=' rcc';tag='<span class="rctag tgc">Correct answer</span>';}
+        else if(isUser){cc+=' rcw';tag='<span class="rctag tgw">Your answer</span>';}
+        ch+='<div class="'+cc+'"><div class="rcl">'+String.fromCharCode(65+ci)+'</div><div style="flex:1">'+c+'</div>'+tag+'</div>';
+      });
+      ch+='</div>';
+      rl.innerHTML+='<div class="ri '+cls+'"><div class="rist">'+stat+'</div><div class="riq">'+(i+1)+'. '+q.q+'</div>'+ch+'<div class="riexp">'+q.exp+'</div></div>';
+    });
+  });
+  setTimeout(function(){document.querySelectorAll('.bdbar').forEach(function(b){b.style.width=b.dataset.p+'%';});},150);
+}
+
+function resetAll(){
+  clearInterval(timer);clearInterval(bTimer);
+  secQs={};answers={};secIdx=0;curQ=0;mode='quick';
+  selSecs=[...SORD];
+  document.getElementById('results').style.display='none';
+  document.getElementById('timer').classList.remove('urgent');
+  document.querySelectorAll('.sc').forEach(function(c){c.classList.add('sel');});
+  setMode('quick');
+// SERVICE WORKER REGISTRATION
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(err) {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
