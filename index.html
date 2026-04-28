@@ -302,8 +302,11 @@ function toggleSec(el){
 function startExam(){
   selSecs.forEach(s=>{
     var pool=shuffle(QB[s]);
-    var count = (mode==='full'?SCFG[s].full:SCFG[s].qmin);
-    secQs[s]=pool.slice(0, Math.min(pool.length, count));
+    var targetCount = (mode==='full'?SCFG[s].full:SCFG[s].qmin);
+    // Use Math.min to ensure we don't try to take more than we have
+    secQs[s]=pool.slice(0, Math.min(pool.length, targetCount));
+    
+    // CRITICAL FIX: Base the answer array size on the ACTUAL questions retrieved
     answers[s]=new Array(secQs[s].length).fill(null);
   });
   secIdx=0;curQ=0;
