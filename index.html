@@ -73,14 +73,14 @@ h1 span{color:var(--teal);}
 #breakScreen p{color:var(--muted);max-width:400px;line-height:1.6;}
 .btimer{font-size:3rem;font-family:Georgia,serif;color:var(--teal);}
 
-/* RESULTS & SCORE GRID */
-#results{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1.4rem 3rem;gap:1.6rem;max-width:800px;width:100%;}
+/* RESULTS & FOUR-COLUMN SCORE GRID */
+#results{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1.4rem 3rem;gap:1.6rem;max-width:900px;width:100%;}
 #results h2{font-family:Georgia,serif;font-size:1.9rem;text-align:center;}
-.score-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;width:100%;margin-bottom:1rem;}
-.mini-ring{width:150px;height:120px;background:var(--card);border:2.5px solid var(--teal);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+.score-grid{display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;width:100%;margin-bottom:1rem;}
+.mini-ring{background:var(--card);border:2px solid var(--teal);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
 .mini-ring .val{font-family:Georgia,serif;font-size:1.8rem;color:var(--teal);font-weight:700;}
-.mini-ring .lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;text-align:center;}
-.overall-stat{font-size:1.1rem;color:var(--white);font-weight:600;background:rgba(46,196,182,0.1);padding:8px 20px;border-radius:20px;border:1px solid rgba(46,196,182,0.3);}
+.mini-ring .lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:5px;text-align:center;}
+.overall-stat{font-size:1.1rem;color:var(--white);font-weight:600;background:rgba(46,196,182,0.15);padding:10px 25px;border-radius:25px;border:1px solid rgba(46,196,182,0.3);}
 
 .bdown{width:100%;display:flex;flex-direction:column;gap:.65rem;}
 .bdrow{display:flex;align-items:center;gap:.9rem;background:var(--card);border-radius:9px;padding:.85rem 1.1rem;}
@@ -112,6 +112,11 @@ h1 span{color:var(--teal);}
 .riexp{padding:.7rem .9rem;background:rgba(46,196,182,0.06);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;font-size:.82rem;line-height:1.55;color:#cde;}
 .riexp strong{color:var(--teal);}
 .btnrow{display:flex;gap:.7rem;flex-wrap:wrap;justify-content:center;}
+
+@media screen and (max-width: 600px) {
+  .score-grid { grid-template-columns: 1fr 1fr; }
+}
+
 @media print{
   body{background:#fff!important;color:#000!important;font-family:'Times New Roman',serif!important;}
   #splash,#exam,#breakScreen,.btnrow{display:none!important;}
@@ -120,7 +125,6 @@ h1 span{color:var(--teal);}
   .mini-ring{border:1px solid #000!important;height:auto!important;padding:5px!important;}
   .mini-ring .val{font-size:1.2rem!important;color:#000!important;}
   .mini-ring .lbl{font-size:.6rem!important;color:#000!important;}
-  .ri{page-break-inside:avoid;}
 }
 </style>
 </head>
@@ -128,7 +132,7 @@ h1 span{color:var(--teal);}
 <div id="splash">
   <div class="badge">TEAS 7</div>
   <h1>TEAS 7 <span>Practice</span> Exam</h1>
-  <p class="subtitle">Randomized questions every session. Pick Quick or Full. Select your sections and go.</p>
+  <p class="subtitle">Randomized questions for nursing entrance prep. Select sections and mode to begin.</p>
   <div class="mode-row">
     <div class="mode-card sel" id="mq" onclick="setMode('quick')">
       <div class="mi">⚡</div>
@@ -138,25 +142,25 @@ h1 span{color:var(--teal);}
     <div class="mode-card" id="mf" onclick="setMode('full')">
       <div class="mi">📋</div>
       <div class="mt">Full Exam</div>
-      <div class="md">Official TEAS 7 counts · 170 q · 10-min break</div>
+      <div class="md">170 q · 209 min · 10-min break</div>
     </div>
   </div>
   <div class="sgrid">
     <div class="sc sel" data-s="reading" onclick="toggleSec(this)">
       <div class="st">📖 Reading</div>
-      <div class="sm" id="mr"><span>10 q</span> · ~14 min</div>
+      <div class="sm" id="mR"><span>10 q</span> · ~14 min</div>
     </div>
     <div class="sc sel" data-s="math" onclick="toggleSec(this)">
       <div class="st">🔢 Mathematics</div>
-      <div class="sm" id="mm"><span>10 q</span> · ~15 min</div>
+      <div class="sm" id="mM"><span>10 q</span> · ~15 min</div>
     </div>
     <div class="sc sel" data-s="science" onclick="toggleSec(this)">
       <div class="st">🔬 Science</div>
-      <div class="sm" id="ms"><span>10 q</span> · ~12 min</div>
+      <div class="sm" id="mS"><span>10 q</span> · ~12 min</div>
     </div>
     <div class="sc sel" data-s="english" onclick="toggleSec(this)">
       <div class="st">✏️ English & Language</div>
-      <div class="sm" id="me"><span>10 q</span> · ~10 min</div>
+      <div class="sm" id="mE"><span>10 q</span> · ~10 min</div>
     </div>
   </div>
   <div class="infobar" id="ibar"><strong>Quick Practice:</strong> 10 randomly selected questions per section.</div>
@@ -198,14 +202,13 @@ h1 span{color:var(--teal);}
 
 <div id="results">
   <h2 id="rtitle">Practice Complete</h2>
-  <div class="score-grid" id="scoreGrid">
-    </div>
+  <div class="score-grid" id="scoreGrid"></div>
   <div class="overall-stat" id="overallStat">Overall Score: --%</div>
   <div class="bdown" id="bdown"></div>
-  <h3 class="sechdiv">Question Review</h3>
+  <h3 class="sechdiv">Detailed Review</h3>
   <div class="rlist" id="rlist"></div>
   <div class="btnrow">
-    <button class="btn" onclick="resetAll()">Try Again</button>
+    <button class="btn" onclick="location.reload()">Try Again</button>
     <button class="btn-ghost" onclick="window.print()">🖨️ Print Results</button>
   </div>
 </div>
@@ -217,23 +220,59 @@ var SCFG={
   science:{name:'Science',full:50,fmin:60,qmin:10,qqmin:12},
   english:{name:'English & Language',full:37,fmin:37,qmin:10,qqmin:10}
 };
-var SORD=['reading','math','science','english'];
-var MLABELS={
-  reading:{full:'<span>45 q</span> · 55 min',quick:'<span>10 q</span> · ~14 min'},
-  math:{full:'<span>38 q</span> · 57 min',quick:'<span>10 q</span> · ~15 min'},
-  science:{full:'<span>50 q</span> · 60 min',quick:'<span>10 q</span> · ~12 min'},
-  english:{full:'<span>37 q</span> · 37 min',quick:'<span>10 q</span> · ~10 min'}
-};
 
-// ... [Question Database QB remains unchanged as per provided context] ...
 var QB = {
-  reading: [ /* ... insert questions from index.html ... */ ],
-  math: [ /* ... insert questions from index.html ... */ ],
-  science: [ /* ... insert questions from index.html ... */ ],
-  english: [ /* ... insert questions from index.html ... */ ]
+reading:[
+{q:"A passage states: 'Despite vaccination campaigns, measles outbreaks continued in low-immunization communities.' The author's primary purpose is to:",choices:["Persuade readers to vaccinate","Argue vaccines are ineffective","Inform readers about an epidemiological relationship","Entertain with a health story"],answer:2,exp:"<strong>Inform about an epidemiological relationship.</strong> A factual correlation is presented."},
+{q:"'Benign' in 'The tumor was benign, so the physician chose watchful waiting' most likely means:",choices:["Malignant","Harmless","Aggressive","Uncertain"],answer:1,exp:"<strong>Harmless.</strong> Watchful waiting signals the tumor was not dangerous."},
+{q:"'The nurse administered medication, and the patient's pain subsided' is which sentence structure?",choices:["Simple","Compound","Complex","Compound-complex"],answer:1,exp:"<strong>Compound.</strong> Two independent clauses joined by a conjunction."},
+{q:"Which text structure is: 'First, assess. Next, develop a care plan. Finally, implement'?",choices:["Cause and effect","Compare and contrast","Sequence/chronological","Problem and solution"],answer:2,exp:"<strong>Sequence/chronological.</strong> Signal words First, Next, Finally indicate time-ordered steps."},
+{q:"'Meticulous' most likely means:",choices:["Careless","Extremely careful and precise","Emotionally reserved","Overly cautious"],answer:1,exp:"<strong>Extremely careful and precise.</strong>"},
+{q:"Which is a secondary source?",choices:["A journal article analyzing multiple original studies","A nurse's original clinical trial","A patient's medical record","Raw survey data"],answer:0,exp:"<strong>A journal article analyzing multiple studies</strong> synthesizes others' research."},
+{q:"'Exacerbate' most nearly means:",choices:["To reduce","To worsen","To study","To prevent"],answer:1,exp:"<strong>To worsen.</strong> 'Stress can exacerbate hypertension.'"},
+{q:"Which demonstrates logos (logical appeal)?",choices:["'Imagine your mother suffering.'","'Studies show 40% reduction in mortality with early intervention.'","'Trust me — I've been a doctor for 20 years.'","'This is simply the right thing to do.'"],answer:1,exp:"<strong>'Studies show 40% reduction'</strong> uses logos — quantitative evidence."},
+{q:"'Iatrogenic' most nearly refers to:",choices:["Disease of unknown origin","Condition caused by medical treatment","Patient's pre-existing condition","Inherited disorder"],answer:1,exp:"<strong>Condition caused by medical treatment.</strong>"},
+{q:"Which transition signals cause-and-effect?",choices:["Meanwhile","Nevertheless","Consequently","Similarly"],answer:2,exp:"<strong>Consequently</strong> signals a result."}
+],
+math:[
+{q:"A nurse must administer 1,500 mL IV over 10 hours. Flow rate in mL/hr?",choices:["100 mL/hr","150 mL/hr","125 mL/hr","175 mL/hr"],answer:1,exp:"<strong>150 mL/hr</strong>: 1,500 ÷ 10 = 150."},
+{q:"Patient weighs 220 lbs. Weight in kg? (1 kg = 2.2 lbs)",choices:["100 kg","110 kg","48 kg","50 kg"],answer:0,exp:"<strong>100 kg</strong>: 220 ÷ 2.2 = 100."},
+{q:"Simplify: 3/4 + 1/6",choices:["4/10","11/12","2/3","5/12"],answer:1,exp:"<strong>11/12</strong>: LCD=12. 9/12 + 2/12 = 11/12."},
+{q:"Medication ordered: 0.5 mg/kg. Patient weighs 80 kg. How many mg?",choices:["40 mg","80 mg","0.5 mg","4 mg"],answer:0,exp:"<strong>40 mg</strong>: 0.5 × 80 = 40."},
+{q:"Temperature is 104°F. Convert to Celsius. C=(F-32)×5/9",choices:["39°C","40°C","41°C","38°C"],answer:1,exp:"<strong>40°C</strong>: (104-32)×5/9 = 72×0.556 ≈ 40."},
+{q:"Solve for x: 4x − 3 = 17",choices:["x=3","x=4","x=5","x=6"],answer:2,exp:"<strong>x=5</strong>: 4x=20 → x=5."},
+{q:"Mean of: 82, 79, 95, 88, 76",choices:["84","83","85","82"],answer:0,exp:"<strong>84</strong>: Sum=420. 420÷5=84."},
+{q:"Tablet: 250 mg. Order: 1 gram. How many tablets?",choices:["2","4","3","5"],answer:1,exp:"<strong>4 tablets</strong>: 1,000÷250=4."},
+{q:"What is 15% of 320?",choices:["48","42","54","46"],answer:0,exp:"<strong>48</strong>: 0.15×320=48."},
+{q:"Evaluate: 2³ + 4² − (3×5)",choices:["9","7","11","3"],answer:0,exp:"<strong>9</strong>: 8+16-15=9."}
+],
+science:[
+{q:"Which organelle packages and ships proteins to their destinations?",choices:["Ribosome","Mitochondria","Golgi apparatus","Lysosome"],answer:2,exp:"<strong>Golgi apparatus</strong> modifies and packages proteins."},
+{q:"The primary function of red blood cells is to:",choices:["Fight infection","Transport oxygen via hemoglobin","Initiate clotting","Produce antibodies"],answer:1,exp:"<strong>Transport oxygen via hemoglobin.</strong>"},
+{q:"Which muscle tissue type is involuntary AND striated?",choices:["Skeletal","Cardiac","Smooth","Connective"],answer:1,exp:"<strong>Cardiac.</strong> Skeletal is voluntary; smooth is non-striated."},
+{q:"Which hormone lowers blood glucose?",choices:["Glucagon","Cortisol","Insulin","Epinephrine"],answer:2,exp:"<strong>Insulin</strong> facilitates glucose uptake."},
+{q:"Normal blood pH range:",choices:["6.85–7.00","7.00–7.25","7.35–7.45","7.50–7.65"],answer:2,exp:"<strong>7.35–7.45.</strong>"},
+{q:"Which brain structure regulates heart rate, BP, and breathing?",choices:["Cerebrum","Cerebellum","Medulla oblongata","Thalamus"],answer:2,exp:"<strong>Medulla oblongata</strong> contains autonomic control centers."},
+{q:"Which best describes a covalent bond?",choices:["Transfer of electrons","Sharing of electron pairs","Attraction between opposite ions","Weak nonpolar attraction"],answer:1,exp:"<strong>Sharing of electron pairs.</strong>"},
+{q:"Which immune cell primarily produces antibodies?",choices:["T-lymphocyte","Natural killer cell","B-lymphocyte (plasma cell)","Neutrophil"],answer:2,exp:"<strong>B-lymphocytes</strong> secrete antibodies."},
+{q:"The Loop of Henle's primary function:",choices:["Reabsorbs glucose","Creates osmotic gradient for water reabsorption","Produces urine directly","Filters blood"],answer:1,exp:"<strong>Creates osmotic gradient</strong> for water reabsorption."},
+{q:"Which blood type is the universal donor?",choices:["Type A","Type B","Type AB","Type O negative"],answer:3,exp:"<strong>Type O negative</strong> lacks A, B, and Rh antigens."}
+],
+english:[
+{q:"Which sentence is grammatically correct?",choices:["Neither the doctor nor the nurses was available.","Neither the doctor nor the nurses were available.","Neither the doctor nor the nurses is available.","Neither the doctor nor the nurses are being available."],answer:1,exp:"<strong>'Were available'</strong> is correct. Verb agrees with nearest noun (nurses)."},
+{q:"Choose the correctly punctuated sentence.",choices:["The lab results however were inconclusive.","The lab results, however, were inconclusive.","The lab results however, were inconclusive.","The lab results, however were inconclusive."],answer:1,exp:"<strong>Commas before and after 'however'</strong> as an interrupter."},
+{q:"Which word is spelled correctly?",choices:["Garentee","Guarantee","Guarentee","Garantee"],answer:1,exp:"<strong>Guarantee.</strong>"},
+{q:"Which contains a dangling modifier?",choices:["Running quickly, the nurse reached the patient.","Having reviewed the chart, the doctor ordered tests.","Walking down the hall, the chart fell to the floor.","After eating, the patient felt nauseous."],answer:2,exp:"<strong>'Walking down the hall, the chart fell.'</strong> The chart cannot walk."},
+{q:"Which uses a colon correctly?",choices:["The nurse needed: gloves, gauze, and tape.","She brought the following supplies: gloves, gauze, and tape.","She: brought gloves, gauze, and tape.","She brought: gloves, gauze, and tape."],answer:1,exp:"<strong>Colon follows a complete independent clause.</strong>"},
+{q:"Which is a complex sentence?",choices:["The patient arrived and the nurse assessed him.","The patient arrived.","Because the patient was in pain, the nurse administered medication.","The patient arrived; the nurse assessed him."],answer:2,exp:"<strong>One independent + one dependent clause = complex.</strong>"},
+{q:"Part of speech of 'quickly' in: 'The nurse quickly assessed the patient.'",choices:["Adjective","Adverb","Preposition","Conjunction"],answer:1,exp:"<strong>Adverb</strong> modifies 'assessed.'"},
+{q:"Which is written in the active voice?",choices:["The chart was reviewed by the physician.","Medication was administered to the patient.","The physician reviewed the chart.","The patient was assessed by the team."],answer:2,exp:"<strong>Subject performs action.</strong>"},
+{q:"The suffix '-itis' means:",choices:["Removal of","Condition of","Inflammation of","Study of"],answer:2,exp:"<strong>Inflammation.</strong>"},
+{q:"Which demonstrates parallel structure?",choices:["She likes running, to swim, and hikes.","She likes running, swimming, and hiking.","She likes to run, swimming, and hike.","She likes to run, to swimming, and hiking."],answer:1,exp:"<strong>Running, swimming, hiking</strong> are all gerunds."}
+]
 };
-// NOTE: Please ensure the original QB array contents are present here.
 
+var SORD=['reading','math','science','english'];
 var mode='quick',selSecs=[...SORD],secQs={},secIdx=0,curQ=0,answers={},timer=null,secs=0,bTimer=null,bSecs=600;
 
 function shuffle(a){var b=[...a];for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
@@ -242,7 +281,10 @@ function setMode(m){
   mode=m;
   document.getElementById('mq').classList.toggle('sel',m==='quick');
   document.getElementById('mf').classList.toggle('sel',m==='full');
-  SORD.forEach(function(k){document.getElementById('m'+k.charAt(0)).innerHTML=MLABELS[k][m==='full'?'full':'quick'];});
+  SORD.forEach(k=>{
+    let count = m==='full'?SCFG[k].full:SCFG[k].qmin;
+    document.getElementById('m'+k.charAt(0).toUpperCase()).innerHTML=`<span>${count} q</span> · ~${SCFG[k].qqmin} min`;
+  });
 }
 
 function toggleSec(el){
@@ -250,17 +292,18 @@ function toggleSec(el){
   if(el.classList.contains('sel')){
     if(selSecs.length===1)return;
     el.classList.remove('sel');
-    selSecs=selSecs.filter(function(x){return x!==s;});
+    selSecs=selSecs.filter(x=>x!==s);
   } else {
     el.classList.add('sel');
-    if(!selSecs.includes(s)){selSecs.push(s);selSecs.sort(function(a,b){return SORD.indexOf(a)-SORD.indexOf(b);});}
+    if(!selSecs.includes(s)){selSecs.push(s);selSecs.sort((a,b)=>SORD.indexOf(a)-SORD.indexOf(b));}
   }
 }
 
 function startExam(){
-  selSecs.forEach(function(s){
+  selSecs.forEach(s=>{
     var pool=shuffle(QB[s]);
-    secQs[s]=pool.slice(0,(mode==='full'?SCFG[s].full:SCFG[s].qmin));
+    var count = (mode==='full'?SCFG[s].full:SCFG[s].qmin);
+    secQs[s]=pool.slice(0, Math.min(pool.length, count));
     answers[s]=new Array(secQs[s].length).fill(null);
   });
   secIdx=0;curQ=0;
@@ -272,14 +315,12 @@ function startExam(){
 function startTimer(){
   clearInterval(timer);
   secs=(mode==='full'?SCFG[selSecs[secIdx]].fmin:SCFG[selSecs[secIdx]].qqmin)*60;
-  timer=setInterval(function(){
+  timer=setInterval(()=>{
     secs--;
     if(secs<=0){advanceSec();return;}
-    var m=Math.floor(secs/60).toString().padStart(2,'0');
-    var s=(secs%60).toString().padStart(2,'0');
-    var el=document.getElementById('timer');
-    el.textContent=m+':'+s;
-    el.classList.toggle('urgent',secs<=300);
+    var m=Math.floor(secs/60).toString().padStart(2,'0'),s=(secs%60).toString().padStart(2,'0');
+    document.getElementById('timer').textContent=m+':'+s;
+    document.getElementById('timer').classList.toggle('urgent',secs<=300);
   },1000);
 }
 
@@ -291,7 +332,7 @@ function advanceSec(){
     document.getElementById('exam').style.display='none';
     document.getElementById('breakScreen').style.display='flex';
     bSecs=600;
-    bTimer=setInterval(function(){
+    bTimer=setInterval(()=>{
       bSecs--;
       var m=Math.floor(bSecs/60).toString().padStart(2,'0'),s=(bSecs%60).toString().padStart(2,'0');
       document.getElementById('btimer').textContent=m+':'+s;
@@ -313,18 +354,18 @@ function renderQ(){
   document.getElementById('pfill').style.width=(((curQ+1)/total)*100)+'%';
   document.getElementById('ptxt').textContent=(curQ+1)+'/'+total;
   var ch=document.getElementById('choices');ch.innerHTML='';
-  q.choices.forEach(function(c,i){
+  q.choices.forEach((c,i)=>{
     var d=document.createElement('div');d.className='choice'+(done?' disabled':'');
     if(done){if(i===q.answer)d.classList.add('correct');else if(i===ans)d.classList.add('wrong');}
     else if(ans===i)d.classList.add('selected');
     d.innerHTML='<div class="cletter">'+String.fromCharCode(65+i)+'</div><div>'+c+'</div>';
-    if(!done)d.onclick=function(){answers[s][curQ]=i;renderQ();};
+    if(!done)d.onclick=()=>{answers[s][curQ]=i;renderQ();};
     ch.appendChild(d);
   });
   var exp=document.getElementById('expbox');if(done){exp.innerHTML=q.exp;exp.classList.add('show');}else{exp.classList.remove('show');}
   document.getElementById('prevBtn').disabled=curQ===0;
   var nb=document.getElementById('nextBtn'),sb=document.getElementById('subBtn');
-  if(curQ===total-1){nb.style.display='none';sb.style.display='inline-block';}else{nb.style.display='inline-block';sb.style.display='none';nb.onclick=function(){nav(1);};}
+  if(curQ===total-1){nb.style.display='none';sb.style.display='inline-block';}else{nb.style.display='inline-block';sb.style.display='none';nb.onclick=()=>{nav(1);};}
 }
 
 function nav(d){curQ+=d;renderQ();}
@@ -335,32 +376,24 @@ function showResults(){
   var grid=document.getElementById('scoreGrid'),rl=document.getElementById('rlist'),bd=document.getElementById('bdown');
   grid.innerHTML='';rl.innerHTML='';bd.innerHTML='';
   var tc=0,tq=0;
-  selSecs.forEach(function(s){
+  selSecs.forEach(s=>{
     var qs=secQs[s],an=answers[s];
-    var c=an.filter(function(a,i){return a===qs[i].answer;}).length;
+    var c=an.filter((a,i)=>a===qs[i].answer).length;
     tc+=c;tq+=qs.length;
     var pct=Math.round(c/qs.length*100);
-    grid.innerHTML+='<div class="mini-ring"><div class="val">'+pct+'%</div><div class="lbl">'+SCFG[s].name+'</div></div>';
-    bd.innerHTML+='<div class="bdrow"><div class="bdlabel">'+SCFG[s].name+'</div><div class="bdbarw"><div class="bdbar" style="width:'+pct+'%"></div></div><div class="bdpct">'+c+'/'+qs.length+'</div></div>';
-    rl.innerHTML+='<div class="sechdiv">'+SCFG[s].name+'</div>';
-    qs.forEach(function(q,i){
+    grid.innerHTML+=`<div class="mini-ring"><div class="val">${pct}%</div><div class="lbl">${SCFG[s].name}</div><div class="lbl" style="font-size:0.5rem">${c}/${qs.length} Correct</div></div>`;
+    bd.innerHTML+=`<div class="bdrow"><div class="bdlabel">${SCFG[s].name}</div><div class="bdbarw"><div class="bdbar" style="width:${pct}%"></div></div><div class="bdpct">${pct}% (${c}/${qs.length})</div></div>`;
+    rl.innerHTML+=`<div class="sechdiv">${SCFG[s].name} Review</div>`;
+    qs.forEach((q,i)=>{
       var a=an[i],skipped=a===null,corr=a===q.answer;
-      var chs='';q.choices.forEach(function(ch,ci){
+      var chs='';q.choices.forEach((ch,ci)=>{
         var isC=ci===q.answer,isU=ci===a;
-        chs+='<div class="richoice '+(isC?'rcc':(isU?'rcw':''))+'"><div class="rcl">'+String.fromCharCode(65+ci)+'</div>'+ch+'</div>';
+        chs+=`<div class="richoice ${isC?'rcc':(isU?'rcw':'')}"><div class="rcl">${String.fromCharCode(65+ci)}</div>${ch}</div>`;
       });
-      rl.innerHTML+='<div class="ri '+(skipped?'rs':(corr?'rc':'rw'))+'"><div class="rist">'+(skipped?'Skipped':(corr?'Correct':'Incorrect'))+'</div><div class="riq">'+q.q+'</div>'+chs+'<div class="riexp">'+q.exp+'</div></div>';
+      rl.innerHTML+=`<div class="ri ${skipped?'rs':(corr?'rc':'rw')}"><div class="rist">${skipped?'Skipped':(corr?'Correct':'Incorrect')}</div><div class="riq">${q.q}</div>${chs}<div class="riexp">${q.exp}</div></div>`;
     });
   });
-  document.getElementById('overallStat').textContent='Overall Score: '+Math.round(tc/tq*100)+'%';
-}
-
-function resetAll(){location.reload();}
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').catch(function(err) { console.log('SW failed:', err); });
-  });
+  document.getElementById('overallStat').textContent='Overall Performance: '+Math.round(tc/tq*100)+'%';
 }
 </script>
 </body>
